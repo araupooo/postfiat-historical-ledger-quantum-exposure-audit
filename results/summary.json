@@ -1,0 +1,134 @@
+{
+  "chain_linkage": {
+    "break_count": 0,
+    "breaks": [],
+    "consecutive_parent_hash_links_checked": 493
+  },
+  "endpoint": "https://rpc.testnet.postfiat.org/",
+  "entry_census": {
+    "by_type": {
+      "AccountRoot": 240,
+      "DirectoryNode": 2,
+      "LedgerHashes": 7,
+      "NFTokenOffer": 3,
+      "NFTokenPage": 4
+    },
+    "distinct_entry_types_in_page": 5,
+    "entries_carrying_public_key": 0,
+    "entries_in_page": 256,
+    "key_carrying_entries": []
+  },
+  "fetch_date_utc": "2026-11-13T19:34:17Z",
+  "harness_version": "1.0.0",
+  "pinned_commit": "0085a1ff885d6a446369cf73a4430f75af22be55",
+  "record_classes": [
+    {
+      "record_class": "single-signed transaction",
+      "sampled_count": 142,
+      "unit": "signatures"
+    },
+    {
+      "record_class": "multi-signed transaction signature",
+      "sampled_count": 0,
+      "unit": "signatures"
+    },
+    {
+      "record_class": "ledger header (hash-chained)",
+      "sampled_count": 497,
+      "unit": "headers"
+    },
+    {
+      "record_class": "validation (ephemeral, not in ledger)",
+      "sampled_count": 0,
+      "unit": "validations"
+    },
+    {
+      "record_class": "manifest (ephemeral, not in ledger)",
+      "sampled_count": 0,
+      "unit": "manifests"
+    },
+    {
+      "record_class": "ledger entry carrying a public key (state page)",
+      "sampled_count": 0,
+      "unit": "entries"
+    },
+    {
+      "record_class": "ledger entry without signature or key",
+      "sampled_count": 256,
+      "unit": "entries"
+    },
+    {
+      "record_class": "payment-channel claim (off-ledger signed message)",
+      "sampled_count": 0,
+      "unit": "claims"
+    },
+    {
+      "record_class": "cross-chain attestation signature (in-transaction)",
+      "sampled_count": 0,
+      "unit": "signatures"
+    }
+  ],
+  "sample": {
+    "entry_census_has_more_pages": true,
+    "entry_census_ledger": 8021439,
+    "entry_census_limit": 400,
+    "entry_census_returned": 256,
+    "ledger_end": 8021439,
+    "ledger_start": 8020940,
+    "ledgers_fetched": 497,
+    "ledgers_missing": 3,
+    "ledgers_requested": 500
+  },
+  "sample_sha256": "783f7f9ac750660620b7f763b28c3ec3fee8885bb7fe47378422a466ea282809",
+  "server_info": {
+    "build_version": "1.0.9",
+    "complete_ledgers": "7950054-8021439",
+    "network_id": 2025,
+    "validated_ledger": 8021439
+  },
+  "signatures": {
+    "by_key_type": {
+      "ed25519": 142,
+      "none": 0,
+      "other": 0,
+      "secp256k1": 0
+    },
+    "classical_signature_bytes_total": 9088,
+    "ed25519_signature_bytes": {
+      "count": 142,
+      "max": 64,
+      "mean": 64.0,
+      "min": 64
+    },
+    "multi_signed_signatures": 0,
+    "secp256k1_signature_bytes": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null
+    },
+    "single_signed": 142,
+    "total_signatures": 142
+  },
+  "transactions": {
+    "by_result": {
+      "tesSUCCESS": 142
+    },
+    "by_type": {
+      "NFTokenBurn": 9,
+      "NFTokenMint": 14,
+      "Payment": 119
+    },
+    "distinct_accounts": 31,
+    "distinct_multi_signer_accounts": 0,
+    "ledgers_empty": 414,
+    "ledgers_with_transactions": 83,
+    "mean_tx_per_ledger": 0.2857,
+    "total": 142,
+    "unsigned_or_unparsed_tx_hashes": []
+  },
+  "tree_check": {
+    "tree_head_commit": "0085a1ff885d6a446369cf73a4430f75af22be55",
+    "tree_head_matches_pinned": true
+  }
+}

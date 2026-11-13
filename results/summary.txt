@@ -1,0 +1,37 @@
+Historical ledger quantum-exposure audit: sampling summary
+Harness: harness.py 1.0.0
+Pinned tree: postfiatd main 0085a1ff885d6a446369cf73a4430f75af22be55
+Endpoint: https://rpc.testnet.postfiat.org/
+Fetch date (UTC): 2026-11-13T19:34:17Z
+Server: build 1.0.9, network_id 2025, complete_ledgers 7950054-8021439
+
+Sample: 500 consecutive validated ledgers, 8020940 to 8021439; 497 fetched, 3 missing
+Chain linkage: 493 consecutive parent-hash links checked, 0 breaks
+
+Transactions: 142 total in 83 ledgers with transactions (414 empty ledgers); mean 0.2857 per ledger
+Distinct transacting accounts: 31
+Distinct multi-signature signer accounts: 0
+Transaction types: {"NFTokenBurn": 9, "NFTokenMint": 14, "Payment": 119}
+Transaction results: {"tesSUCCESS": 142}
+
+Signatures: 142 total (142 single-signed, 0 multi-signed)
+By key type: {"ed25519": 142, "none": 0, "other": 0, "secp256k1": 0}
+Ed25519 signature bytes: {"count": 142, "max": 64, "mean": 64.0, "min": 64}
+secp256k1 signature bytes: {"count": 0, "max": null, "mean": null, "min": null}
+Classical signature bytes total: 9088
+
+Entry census (first 256 entries of ledger 8021439): 256 entries, 5 distinct types, 0 carry a public key
+Entry types in page: {"AccountRoot": 240, "DirectoryNode": 2, "LedgerHashes": 7, "NFTokenOffer": 3, "NFTokenPage": 4}
+
+Record classes (sampled counts):
+  single-signed transaction: 142 signatures
+  multi-signed transaction signature: 0 signatures
+  ledger header (hash-chained): 497 headers
+  validation (ephemeral, not in ledger): 0 validations
+  manifest (ephemeral, not in ledger): 0 manifests
+  ledger entry carrying a public key (state page): 0 entries
+  ledger entry without signature or key: 256 entries
+  payment-channel claim (off-ledger signed message): 0 claims
+  cross-chain attestation signature (in-transaction): 0 signatures
+
+Limits: this is a SAMPLE of recent history, not the full history. Validations, manifests, proposals and payment-channel claims are NOT recorded in ledgers and therefore cannot be counted from ledger data; their counts above are 0 by construction, with the reason stated in record_class_counts.csv. See assumptions.md.
