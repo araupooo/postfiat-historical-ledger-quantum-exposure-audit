@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Historical Ledger Quantum-Exposure Audit</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:960px;margin:2em auto;padding:0 1em;color:#111}
+table{border-collapse:collapse;margin:1em 0;width:100%}
+th,td{border:1px solid #999;padding:4px 8px;text-align:left;vertical-align:top}
+th{background:#eee}
+code{background:#f4f4f4;padding:0 2px}
+h1{font-size:1.5em}h2{font-size:1.2em;margin-top:1.5em}
+.warn{background:#fff3cd;border:1px solid #d8b400;padding:8px 12px}
+</style>
+</head>
+<body>
+<h1>Historical Ledger Quantum-Exposure Audit</h1>
+<p>Pinned tree: postfiatd main <code>0085a1ff885d6a446369cf73a4430f75af22be55</code>.
+Harness: <code>harness.py 1.0.0</code>. Full pack: <code>README.md</code>;
+claim-to-evidence index: <code>claim_evidence_index.md</code>.</p>
+
+<h2>Headline finding</h2>
+<p>The ledger's permanently recorded history contains <strong>one</strong>
+signature-bearing record class in meaningful quantity:
+<strong>transactions</strong>. Validations, proposals, manifests and
+payment-channel claims are <strong>not recorded in ledgers at all</strong>
+&mdash; they are ephemeral. A future quantum adversary cannot harvest
+them from history. What history does record, permanently and publicly,
+is every transaction signature ever validated, with its public key.
+Forging a key lets an adversary submit <em>new</em> transactions as the
+account; it cannot rewrite validated history, which sits under the
+SHA-512Half hash chain.</p>
+
+<h2>Measured sample</h2>
+<ul>
+<li>Sample: 500 consecutive validated ledgers,
+8020940 to 8021439; 497 fetched,
+3 failed (see <code>results/fetch_log.json</code>).</li>
+<li>Fetch date (UTC): 2026-11-13T19:34:17Z. Endpoint:
+<code>https://rpc.testnet.postfiat.org/</code>. Server: build 1.0.9, network_id
+2025, complete_ledgers 7950054-8021439.</li>
+<li>Transactions: <strong>142</strong> in 83
+ledgers with transactions (414 empty); mean 0.2857
+per ledger; <strong>31 distinct accounts</strong>.</li>
+<li>Types: {&quot;NFTokenBurn&quot;: 9, &quot;NFTokenMint&quot;: 14, &quot;Payment&quot;: 119}. Results: {&quot;tesSUCCESS&quot;: 142}.</li>
+<li>Signatures: <strong>142 total</strong>
+(142 single-signed, 0 multi-signed);
+by key type: {&quot;ed25519&quot;: 142, &quot;none&quot;: 0, &quot;other&quot;: 0, &quot;secp256k1&quot;: 0}. Ed25519 signatures: 142, all
+64 bytes. Classical signature bytes total: 9088.</li>
+<li>Chain linkage: 493 consecutive parent-hash links checked,
+<strong>0 breaks</strong>.</li>
+<li>Entry census (first 256 entries of ledger
+8021439; server capped the page at 256): 256
+entries, 5 distinct types, 0 carrying a
+public key.</li>
+</ul>
+
+<h2>Record-class inventory</h2>
+<table>
+<tr><th>ID</th><th>Record class</th><th>Where recorded</th><th>Scheme</th>
+<th>Key type</th><th>Pubkey (B)</th><th>Signature (B)</th><th>Sampled</th></tr>
+<tr><td>R-01</td><td>single-signed transaction</td><td>validated ledger (transaction + metadata)</td><td>Ed25519 or secp256k1/ECDSA</td><td>ed25519 or secp256k1</td><td>33</td><td>64 (Ed25519) / 70-72 DER (secp256k1)</td><td>142</td></tr>
+<tr><td>R-02</td><td>multi-signed transaction</td><td>validated ledger (Signers array)</td><td>Ed25519 or secp256k1/ECDSA per signer</td><td>ed25519 or secp256k1</td><td>33 per signer</td><td>64 (Ed25519) / 70-72 DER (secp256k1) per signer</td><td>0</td></tr>
+<tr><td>R-03</td><td>batch transaction signature</td><td>validated ledger (BatchSigners array)</td><td>Ed25519 or secp256k1/ECDSA per batch signer</td><td>ed25519 or secp256k1</td><td>33 per signer</td><td>64 (Ed25519) / 70-72 DER (secp256k1) per signer</td><td>0</td></tr>
+<tr><td>R-04</td><td>cross-chain attestation signature</td><td>validated ledger (inside XChain transaction attestation collection)</td><td>Ed25519 or secp256k1/ECDSA per attester</td><td>ed25519 or secp256k1</td><td>33 per attester</td><td>64 (Ed25519) / 70-72 DER (secp256k1) per attestation</td><td>0</td></tr>
+<tr><td>R-05</td><td>payment-channel claim</td><td>off-ledger signed message (presented on-ledger only at redemption)</td><td>Ed25519 or secp256k1/ECDSA (channel key)</td><td>ed25519 or secp256k1</td><td>33 (ltPAYCHAN sfPublicKey)</td><td>64 (Ed25519) / 70-72 DER (secp256k1)</td><td>0</td></tr>
+<tr><td>R-06</td><td>validation</td><td>ephemeral (gossiped via peer protocol; NOT recorded in any ledger)</td><td>secp256k1/ECDSA only</td><td>secp256k1</td><td>33</td><td>70-72 DER</td><td>0</td></tr>
+<tr><td>R-07</td><td>consensus proposal</td><td>ephemeral (gossiped via peer protocol; NOT recorded in any ledger)</td><td>secp256k1/ECDSA only</td><td>secp256k1</td><td>33</td><td>1-72 (tree enforces non-empty and at most 72 bytes)</td><td>0</td></tr>
+<tr><td>R-08</td><td>validator manifest</td><td>ephemeral (distributed via validator site / peer protocol; NOT recorded in any ledger)</td><td>Ed25519 or secp256k1/ECDSA (either key type accepted)</td><td>ed25519 or secp256k1</td><td>33 (master key) + 33 (ephemeral signing key)</td><td>64 (Ed25519) / 70-72 DER (secp256k1) x 2 (ephemeral signature + master signature)</td><td>0</td></tr>
+<tr><td>R-09</td><td>ledger header</td><td>validated ledger (header hash chain)</td><td>none (no signature - SHA-512Half hash chain)</td><td>none</td><td>0</td><td>0</td><td>497</td></tr>
+<tr><td>R-10</td><td>ledger entry (state)</td><td>validated ledger state (30 entry types)</td><td>none in the entry itself (see notes)</td><td>none in the entry itself (except ltPAYCHAN sfPublicKey)</td><td>0 (entries carry no key; ltPAYCHAN carries one 33-byte public key)</td><td>0</td><td>no for the entry itself - but a key carried by an entry (ltPAYCHAN) or referenced by it (SignerList accounts) is forgeable as in R-01/R-05</td></tr>
+</table>
+<p>Full evidence (file:line citations) in <code>record_inventory.md</code>
+and <code>record_inventory.csv</code>.</p>
+
+<h2>Forgeable surface (sampled counts)</h2>
+<table>
+<tr><th>Record class</th><th>Sampled</th><th>Unit</th>
+<th>Forgeable by a quantum adversary</th></tr>
+<tr><td>single-signed transaction</td><td>142</td><td>signatures</td><td>yes - signing key recoverable from exposed public key</td></tr>
+<tr><td>multi-signed transaction signature</td><td>0</td><td>signatures</td><td>yes - per signer key, same as single-signed</td></tr>
+<tr><td>ledger header (hash-chained)</td><td>497</td><td>headers</td><td>no - headers carry no signature; integrity is the SHA-512Half hash chain plus the validation quorum at close time</td></tr>
+<tr><td>validation (ephemeral, not in ledger)</td><td>0</td><td>validations</td><td>yes in principle (validator ephemeral key, secp256k1) - but validations are NOT recorded in ledger history, so there is no historical validation to harvest; the live threat is forging current validations</td></tr>
+<tr><td>manifest (ephemeral, not in ledger)</td><td>0</td><td>manifests</td><td>yes in principle (validator master key, secp256k1, public in the manifest itself) - manifests are NOT recorded in ledger history; they are distributed via validator site / peer protocol</td></tr>
+<tr><td>ledger entry carrying a public key (state page)</td><td>0</td><td>entries</td><td>yes - the carried key itself is the exposed public key</td></tr>
+<tr><td>ledger entry without signature or key</td><td>256</td><td>entries</td><td>no - no signature or public key in the entry; authenticity derives from the ledger hash chain and the validated ledger&#x27;s quorum</td></tr>
+<tr><td>payment-channel claim (off-ledger signed message)</td><td>0</td><td>claims</td><td>yes in principle - claims are signed off-ledger and never enter ledger history until redeemed, so no historical claim can be harvested from the ledger</td></tr>
+<tr><td>cross-chain attestation signature (in-transaction)</td><td>0</td><td>signatures</td><td>yes - attestation public keys and signatures ride inside XChain transactions and are therefore permanently recorded when such a transaction is validated</td></tr>
+</table>
+
+<h2>Entry census (sampled state page)</h2>
+<table>
+<tr><th>LedgerEntryType</th><th>Count in census page</th></tr>
+<tr><td>AccountRoot</td><td>240</td></tr>
+<tr><td>DirectoryNode</td><td>2</td></tr>
+<tr><td>LedgerHashes</td><td>7</td></tr>
+<tr><td>NFTokenOffer</td><td>3</td></tr>
+<tr><td>NFTokenPage</td><td>4</td></tr>
+</table>
+
+<h2>Mitigation verdict</h2>
+<p>Full re-signing of historical transactions is <strong>not
+feasible</strong>: the private keys are held by users and mostly
+unavailable, and re-signing would cost ~7.58 GB of ML-DSA-65 signatures
+for the extrapolated full history while leaving the classical signatures
+in place. The recommended substitute is <strong>post-quantum
+checkpoints</strong>: one ML-DSA-65 signature (3,309 B) over each
+1,000th ledger hash &mdash; about 26.5 MB for the whole history &mdash;
+plus key rotation and the live ML-DSA migration for new records.
+See <code>mitigation_design.md</code> for the phased plan, costs and
+open questions.</p>
+
+<div class="warn"><strong>Limits.</strong> This is a <em>sample</em> of
+recent history, not the full history (see <code>assumptions.md</code>).
+Zero counts for validations, manifests, proposals and payment-channel
+claims are structural &mdash; those records are not in ledgers &mdash;
+not measurements of absence. The ledger was not compiled or executed.
+Reproduction: <code>bash run_all.sh</code> regenerates every derived
+output offline from the vendored sample; see
+<code>REPRODUCTION.md</code> and the raw run log in
+<code>results/run_log.txt</code>.</div>
+</body>
+</html>
